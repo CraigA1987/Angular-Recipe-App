@@ -3,8 +3,17 @@
     <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
       <div class="row">
         <div class="col-xs-12 btn-toolbar">
-          <button type="submit" class="btn btn-success">Save</button>
-          <button type="button" class="btn btn-danger">Cancel</button>
+          <button
+            type="submit"
+            class="btn btn-success"
+            [disabled]="!recipeForm.valid"
+          >
+            <!-- binding to disabled property of button - if Angualr form is not valid, disable it-->
+            Save
+          </button>
+          <button type="button" class="btn btn-danger" (click)="onCancel()">
+            Cancel
+          </button>
         </div>
       </div>
       <div class="row">
@@ -28,6 +37,7 @@
               type="text"
               id="imagePath"
               formControlName="imagePath"
+              #imagePath
               class="form-control"
             />
           </div>
@@ -35,7 +45,7 @@
       </div>
       <div class="row">
         <div class="col-xs-12">
-          <img src="" class="img-responsive" />
+          <img [src]="recipeForm.value.imagePath" class="img-responsive" />
         </div>
       </div>
       <div class="row">
@@ -71,13 +81,25 @@
               />
             </div>
             <div class="col-xs-2">
-              <button class="btn btn-danger">X</button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="onDeleteIngredient(i)"
+              >
+                X
+              </button>
             </div>
           </div>
           <hr />
           <div class="row">
             <div class="col-xs-12">
-              <button class="btn btn-success">Add ingredient</button>
+              <button
+                type="button"
+                class="btn btn-success"
+                (click)="onAddIngredient()"
+              >
+                Add ingredient
+              </button>
             </div>
           </div>
         </div>
