@@ -7,22 +7,37 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
 import { RecipeDetailComponent } from './recipes/recipe-detail/recipe-detail.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
+import { RecipesResolverService } from './recipes/recipes.resolver.service';
 
-const appRoutes: Routes = [ // array of objects, where the objects are the routes we need - can also be child routes
-    { path: '', redirectTo: '/recipes', pathMatch: 'full'}, // Default path on load, redirect to the recipes route - pathMatch: full overides default and only redirects if the full path is empty
-    { path: 'recipes', component: RecipesComponent, children: [
-        {path: '', component: RecipeStartComponent },
-        {path: 'new', component: RecipeEditComponent},
-        {path: ':id', component: RecipeDetailComponent},
-        {path: ':id/edit', component: RecipeEditComponent}
-    ]}, // path is displayed in the URL, which loads a certain component
-    { path: 'shopping-list', component: ShoppingListComponent}
-]
+const appRoutes: Routes = [
+  // array of objects, where the objects are the routes we need - can also be child routes
+  { path: '', redirectTo: '/recipes', pathMatch: 'full' }, // Default path on load, redirect to the recipes route - pathMatch: full overides default and only redirects if the full path is empty
+  {
+    path: 'recipes',
+    component: RecipesComponent,
+    children: [
+      { path: '', component: RecipeStartComponent },
+      { path: 'new', component: RecipeEditComponent },
+      {
+        path: ':id',
+        component: RecipeDetailComponent,
+        resolve: [RecipesResolverService],
+      }, // angular runs resolvers before running the route
+      {
+        path: ':id/edit',
+        component: RecipeEditComponent,
+        resolve: [RecipesResolverService],
+      },
+    ],
+  }, // path is displayed in the URL, which loads a certain component
+  { path: 'shopping-list', component: ShoppingListComponent },
+];
 
-
-@NgModule({ // turn from a normal Angular Class into a module
-    imports: [RouterModule.forRoot(appRoutes)], // this adds our routes into Angular Router, so that Angular knows about them
-    exports: [RouterModule] // exports our configured Router.
-}) 
-export class AppRoutingModule {  // Remember to then add RouterModule as an import in app.module.ts
+@NgModule({
+  // turn from a normal Angular Class into a module
+  imports: [RouterModule.forRoot(appRoutes)], // this adds our routes into Angular Router, so that Angular knows about them
+  exports: [RouterModule], // exports our configured Router.
+})
+export class AppRoutingModule {
+  // Remember to then add RouterModule as an import in app.module.ts
 }
