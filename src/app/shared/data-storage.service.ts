@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { RecipeService } from '../recipes/recipe.service';
 import { Recipe } from '../recipes/recipe.model';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, take, exhaustMap } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({ providedIn: 'root' }) // we are injecting the recipeService / httpService into this service, so we need injectable
 export class DataStorageService {
   constructor(
     private http: HttpClient,
-    private recipesService: RecipeService
+    private recipesService: RecipeService,
+    private authService: AuthService
   ) {} // when using 'private' typescript automatically creates a property of the same name, so it doesnt need explicitly declared
 
   storeRecipes() {
@@ -51,4 +53,7 @@ export class DataStorageService {
         //     this.recipesService.setRecipes(recipes);
       );
   }
+  // get user once, then clear subscription... allowed due to BehaviourSubject rather than normal subject
+  // take tells rxjs that i only want to take 1 value from the observable, then it is autmoatically unsubscribed
+  // exhaustMap waits for the first observable to complete (so gets user), then we can pass data from previous observable into second one
 }

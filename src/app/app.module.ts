@@ -10,13 +10,16 @@ import { RecipeItemComponent } from './recipes/recipe-list/recipe-item/recipe-it
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-edit.component';
 import { from } from 'rxjs';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { DropdownDirective } from './shared/dropdown.directive';
 import { AppRoutingModule } from './app-routing.module';
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 import { ShoppingListService } from './shopping-list/shopping-list.service';
 import { RecipeService } from './recipes/recipe.service';
+import { AuthComponent } from './auth/auth.component';
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -31,6 +34,8 @@ import { RecipeService } from './recipes/recipe.service';
     DropdownDirective,
     RecipeStartComponent,
     RecipeEditComponent,
+    AuthComponent,
+    LoadingSpinnerComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,7 +44,15 @@ import { RecipeService } from './recipes/recipe.service';
     HttpClientModule,
     AppRoutingModule,
   ],
-  providers: [ShoppingListService, RecipeService], // adding services here insures just one instance of each service is avaliable throughout application
+  providers: [
+    ShoppingListService,
+    RecipeService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true,
+    },
+  ], // adding services here insures just one instance of each service is avaliable throughout application
   bootstrap: [AppComponent],
 })
 export class AppModule {}
