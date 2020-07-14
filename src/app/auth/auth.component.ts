@@ -54,4 +54,8 @@ export class AuthComponent {
     ); // sends the http request in the auth service. wont actually send unless it been subscribed to, whcih happens here!
     form.reset();
   }
+
+  onHandleError() {
+    this.error = null;
+  }
 }
