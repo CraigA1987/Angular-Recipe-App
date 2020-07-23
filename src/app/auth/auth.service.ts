@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
-import { throwError, Subject, BehaviorSubject } from 'rxjs';
+import { throwError, BehaviorSubject } from 'rxjs';
 import { User } from './user.model';
-import { registerLocaleData } from '@angular/common';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment'; // environmental variables automatically built into Angular, will switch the file on prod build automatically!
 
 // Firebase API docs tell us what we will get back, so we can define the response as an interface. Not required but a good practice in Angular and TypeScript
 export interface AuthResponseData {
@@ -82,7 +82,8 @@ export class AuthService {
     return this.http
       .post<AuthResponseData>(
         // return so that we can subscibe in the auth component - we want the response there, so we can show loading spinner etc
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAY5aQVPrwhkgoBBcmlViahfp6YGjhr5G8',
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
+          environment.firebaseAPIKey,
         {
           email: email,
           password: password,
@@ -107,7 +108,8 @@ export class AuthService {
   login(email: string, password: string) {
     return this.http
       .post<AuthResponseData>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAY5aQVPrwhkgoBBcmlViahfp6YGjhr5G8',
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
+          environment.firebaseAPIKey,
         {
           email: email,
           password: password,
